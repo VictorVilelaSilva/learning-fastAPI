@@ -1,5 +1,17 @@
 # Fast Zero API
 
+## Índice
+
+1. [Pré-requisitos](#-pré-requisitos)
+2. [Rodando o Projeto pela Primeira Vez](#-rodando-o-projeto-pela-primeira-vez)
+3. [Para Quem Já Fez a Instalação Inicial](#-para-quem-já-fez-a-instalação-inicial)
+4. [Colocando o Interpretador do Poetry no VSCode](#colocando-o-interpretador-do-poetry-no-vscode)
+5. [Estrutura do Projeto](#-estrutura-do-projeto)
+6. [Tecnologias Utilizadas](#-tecnologias-utilizadas)
+7. [Licença](#-licença)
+
+---
+
 Este projeto utiliza FastAPI para criar uma API robusta e moderna, seguindo boas práticas de desenvolvimento.
 
 ## 📋 Pré-requisitos
@@ -82,6 +94,20 @@ Se você já configurou o ambiente anteriormente:
    ```bash
    fastapi dev fast_zero/app.py
    ```
+
+## Colocando o Interpretador do Poetry no VSCode
+Para configurar o Visual Studio Code para usar o interpretador do Poetry, siga estes passos:
+1. dentro do terminal do vscode, ative o ambiente virtual do Poetry:
+   ```bash
+   poetry shell
+   ```
+2. Digite o comando abaixo para saber o path do interpretador do Poetry:
+   ```bash
+   poetry env info --path
+   ```
+3. Copie o caminho retornado e abra o Visual Studio Code.
+4. Pressione `Ctrl + Shift + P` e digite "Python: Select Interpreter".
+5. Cole o caminho do interpretador do Poetry na barra de pesquisa e selecione-o.
 
 ## 📝 Estrutura do Projeto
 
