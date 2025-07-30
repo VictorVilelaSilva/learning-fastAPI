@@ -58,6 +58,12 @@ Para trabalhar dentro do ambiente virtual do Poetry:
 poetry shell
 ```
 
+> ⚠️ **Nota**: Se o comando `poetry shell` não funcionar, primeiro execute:
+> ```bash
+> poetry self add poetry-plugin-shell
+> ```
+> Em seguida, tente novamente o `poetry shell`.
+
 Você verá o nome do ambiente virtual no prompt do seu terminal, indicando que ele está ativo.
 
 ### 5. Executando o Projeto
