@@ -1,5 +1,12 @@
 # Fast Zero API
 
+![FastAPI](https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png)
+![Python](https://img.shields.io/badge/python-3.13+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+Fast Zero é um projeto de exemplo que utiliza o framework FastAPI para construir uma API moderna e eficiente.
+
+Projeto no qual foi baseado: [GitHub](https://github.com/dunossauro/fastapi-do-zero)
 ## Índice
 
 1. [Pré-requisitos](#-pré-requisitos)
