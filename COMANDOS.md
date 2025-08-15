@@ -25,3 +25,13 @@ alembic upgrade head
 ```bash
 alembic downgrade -1
 ```
+
+### Debug no FastAPI
+Caso você queira debugar o FastAPI, você pode colocar o seguinte trecho de código no ponto onde você quer debugar:
+
+```python
+breakpoint()
+```
+E então, ao rodar basta bater na rota que você colocou o `breakpoint()`, e o terminal irá parar naquele ponto, permitindo que você veja as variáveis e o estado do programa.
+
+Para sair do modo de depuração do `breakpoint()`, basta digitar o comando `exit` ou pressionar `Ctrl+D` no terminal onde o depurador está ativo. Ou você pode digitar `c` para continuar a execução do programa.
