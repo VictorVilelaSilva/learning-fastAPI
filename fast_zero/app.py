@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from argon2 import verify_password
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
@@ -8,8 +7,12 @@ from sqlalchemy.orm import Session
 
 from fast_zero.database import get_session
 from fast_zero.models import User
-from fast_zero.schemas import UserList, UserPublic, UserSchema
-from fast_zero.security import create_access_token, get_password_hash
+from fast_zero.schemas import Token, UserList, UserPublic, UserSchema
+from fast_zero.security import (
+    create_access_token,
+    get_password_hash,
+    verify_password,
+)
 
 app = FastAPI(
     title='Estudando Fast API',
@@ -18,7 +21,7 @@ app = FastAPI(
 )
 
 
-@app.post('/token/', status_code=HTTPStatus.OK)
+@app.post('/token', response_model=Token, status_code=HTTPStatus.OK)
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
@@ -33,7 +36,7 @@ def login_for_access_token(
 
     access_token = create_access_token(data={'sub': user.email})
 
-    return {'access_token': access_token, 'token_type': 'bearer'}
+    return {'access_token': access_token, 'token_type': 'Bearer'}
 
 
 @app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
