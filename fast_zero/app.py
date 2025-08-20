@@ -10,6 +10,7 @@ from fast_zero.models import User
 from fast_zero.schemas import Token, UserList, UserPublic, UserSchema
 from fast_zero.security import (
     create_access_token,
+    get_current_user,
     get_password_hash,
     verify_password,
 )
@@ -40,7 +41,10 @@ def login_for_access_token(
 
 
 @app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
-def create_user(user: UserSchema, session: Session = Depends(get_session)):
+def create_user(
+    user: UserSchema,
+    session: Session = Depends(get_session),
+):
     db_user = session.scalar(
         select(User).where(
             (User.username == user.username) | (User.email == user.email)
@@ -73,7 +77,10 @@ def create_user(user: UserSchema, session: Session = Depends(get_session)):
 
 @app.get('/users/', status_code=HTTPStatus.OK, response_model=UserList)
 def read_users(
-    limit: int = 10, skip: int = 0, session: Session = Depends(get_session)
+    limit: int = 10,
+    skip: int = 0,
+    session: Session = Depends(get_session),
+    current_user=Depends(get_current_user),
 ):
     users = session.scalars(select(User).limit(limit).offset(skip))
     return {'users': users}
