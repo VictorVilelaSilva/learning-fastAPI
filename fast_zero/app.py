@@ -3,6 +3,7 @@ from http import HTTPStatus
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from fast_zero.database import get_session
@@ -29,7 +30,13 @@ def login_for_access_token(
 ):
     user = session.scalar(select(User).where(User.email == form_data.username))
 
-    if not user or not verify_password(form_data.password, user.password):
+    if not user:
+        raise HTTPException(
+            status_code=HTTPStatus.UNAUTHORIZED,
+            detail='Incorrect email or password',
+        )
+
+    if not verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=HTTPStatus.UNAUTHORIZED,
             detail='Incorrect email or password',
@@ -102,28 +109,41 @@ def get_user(user_id: int, session: Session = Depends(get_session)):
     '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
 )
 def update_user(
-    user_id: int, user: UserSchema, session: Session = Depends(get_session)
+    user_id: int,
+    user: UserSchema,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
-    db_user = session.scalar(select(User).where(User.id == user_id))
-    if not db_user:
+    if current_user.id != user_id:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='Deu ruim!'
+            status_code=HTTPStatus.FORBIDDEN, detail='Not enough permissions'
         )
-    db_user.username = user.username
-    db_user.password = get_password_hash(user.password)
-    db_user.email = user.email
-    session.commit()
-    session.refresh(db_user)
-    return db_user
+    try:
+        current_user.username = user.username
+        current_user.password = get_password_hash(user.password)
+        current_user.email = user.email
+        session.commit()
+        session.refresh(current_user)
+
+        return current_user
+    except IntegrityError:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail='Username or Email already exists',
+        )
 
 
 @app.delete('/users/{user_id}', status_code=HTTPStatus.OK)
-def delete_user(user_id: int, session: Session = Depends(get_session)):
-    db_user = session.scalar(select(User).where(User.id == user_id))
-    if not db_user:
+def delete_user(
+    user_id: int,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.id != user_id:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='Deu ruim!'
+            status_code=HTTPStatus.FORBIDDEN,
+            detail='You do not have permission to delete this user',
         )
-    session.delete(db_user)
+    session.delete(current_user)
     session.commit()
-    return {'message': 'User deleted successfully'}
+    return {'message': 'User deleted'}
