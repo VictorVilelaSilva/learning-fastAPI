@@ -84,6 +84,8 @@ fastapi dev fast_zero/app.py
 > 💡 A aplicação estará disponível em http://localhost:8000
 >
 > 📚 A documentação da API estará em http://localhost:8000/docs
+>
+> 📚 A documentação alternativa estará em http://localhost:8000/redoc
 
 ## 🔄 Para Quem Já Fez a Instalação Inicial
 
